@@ -2,13 +2,15 @@
 import express from 'express'
 import cors from "cors"
 import 'dotenv/config' // Using this we will get the support of envrionment variable in our backend project.
-
+import connectDB from './config/mongodb.js'
 
 // app config
 // create app instance using this express package.
 const app=express() // This is an express function which we import on top.
 // After the defined the port number 
 const port = process.env.PORT || 4000;
+// After that call connectDB function.
+connectDB();
 
 
 // middlewares - here we add some middleware in our express app.
