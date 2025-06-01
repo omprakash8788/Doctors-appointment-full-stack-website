@@ -2,6 +2,7 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
+import jwt from 'jsonwebtoken'
 
 //API for adding doctor
 const addDoctor = async (req, res) => {
@@ -109,4 +110,36 @@ const addDoctor = async (req, res) => {
   }
 };
 
-export { addDoctor };
+// API for the admin login.
+const loginAdmin= async(req, res)=>{
+     try {
+        // in this try block we first get the email ID and password from the request. And we will match the email ID and password with this .env variable of the admin email and password.
+        // If it is matching in that case we will create a token using the jsonwentoken.
+        
+        //So, first here we will get the email id and password.
+        const {email, password}=req.body;
+        if(email===process.env.ADMIN_EMAIL && password===process.env.ADMIN_PASSWORD){
+            // if both the condition true then we will generate token.
+            // create token and send to the user.
+            const token = jwt.sign(email+password, process.env.JWT_SECRET)
+            // sign() ->>> here we have to provide one data so we can encrypt the data and create a token
+            // email+password => this will be string 
+           // jwt.sign(email+password, process.env.JWT_SECRET) --> By excauting this statenent we will get a token.
+           // Next, we have to send this token as a response.
+           res.json({success:true, token})
+           //Next test this API.
+
+        }else{
+            res.json({success:false, message:"Invalid credentials"})
+        }
+
+        
+     } catch (error) {
+        console.log(error)
+       res.json({success:false, message:error.message})
+
+        
+     }
+}
+
+export { addDoctor, loginAdmin };
