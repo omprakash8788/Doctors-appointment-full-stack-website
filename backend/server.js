@@ -16,7 +16,6 @@ connectDB();
 connectCloudinary();
 
 
-
 // middlewares - here we add some middleware in our express app.
 app.use(express.json()) // in this "use" middleware function we will provide any function that will work as middleware. This will act as a middleware "express.json()".
 
