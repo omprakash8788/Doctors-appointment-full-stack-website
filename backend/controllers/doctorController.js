@@ -23,4 +23,20 @@ const changeAvailablity = async(req, res)=>{
   }
 }
 
-export {changeAvailablity}
+// here we will create one function so that we will get the all doctors in the frontend 
+
+const doctorList=async(req, res)=>{
+  try {
+    const doctors=await doctorModel.find({}).select(['-password', '-email'])
+    // find({}) -- here we get all doctors
+    //.select(['-password', '-email']) ===>>> now from the doctors data we need to remove doctors passsword and email property, so we will not get the email and password of the doctor on the frontend api.
+
+    // Next create the response
+    res.json({success:true, doctors})
+  } catch (error) {
+    console.log(error)
+    res.json({success:false, message:error.message})
+  }
+}
+
+export {changeAvailablity, doctorList}

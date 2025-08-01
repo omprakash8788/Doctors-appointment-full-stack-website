@@ -27,5 +27,6 @@ adminRouter.post("/all-doctors", authAdmin, allDoctors);
 // API endpoint for change availablity status in backend.
 adminRouter.post("/change-availability", authAdmin, changeAvailablity);
 
+
 // After that export adminRouter.
 export default adminRouter;

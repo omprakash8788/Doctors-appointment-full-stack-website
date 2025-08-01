@@ -5,6 +5,7 @@ import 'dotenv/config' // Using this we will get the support of envrionment vari
 import connectDB from './config/mongodb.js'
 import connectCloudinary from './config/cloudinary.js'
 import adminRouter from './routes/adminRoute.js'
+import doctorRouter from './routes/doctorRoute.js'
 // app config
 // create app instance using this express package.
 const app=express() // This is an express function which we import on top.
@@ -28,6 +29,7 @@ app.use(cors()) //This will allow frontend to communicate with backend.
 // localhost"4000/api/admin - Then this router will be use.
 // So, when you hit the API route app.use('/api/admin', adminRouter), it will execute the route adminRouter.post('/add-doctor'), which then invokes the controller function addDoctor.
 
+app.use('/api/doctor',doctorRouter)
 
 app.get('/',(req, res)=>{
   res.send("Api working")
