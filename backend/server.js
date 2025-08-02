@@ -6,6 +6,7 @@ import connectDB from './config/mongodb.js'
 import connectCloudinary from './config/cloudinary.js'
 import adminRouter from './routes/adminRoute.js'
 import doctorRouter from './routes/doctorRoute.js'
+import userRouter from './routes/userRoute.js'
 // app config
 // create app instance using this express package.
 const app=express() // This is an express function which we import on top.
@@ -30,6 +31,7 @@ app.use(cors()) //This will allow frontend to communicate with backend.
 // So, when you hit the API route app.use('/api/admin', adminRouter), it will execute the route adminRouter.post('/add-doctor'), which then invokes the controller function addDoctor.
 
 app.use('/api/doctor',doctorRouter)
+app.use('/api/user', userRouter)
 
 app.get('/',(req, res)=>{
   res.send("Api working")
