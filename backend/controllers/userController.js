@@ -75,7 +75,8 @@ const loginUser = async (req, res) => {
     //Next, we have to check if the user exist with this email id or not.
     if (!user) {
       // so, if we don't have the any user with this email id then this block will be excuting.
-      res.json({ success: false, message: "User does not exist" });
+     return res.json({ success: false, message: "User does not exist" });
+
     };
 
     // after this if statement , if the the user exist then we have to match the password that we have save in the databased.

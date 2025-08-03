@@ -13,6 +13,10 @@ const AppContextProvider = (props)=>{
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [doctors, setDoctors]=useState([])
 
+  // create one state variable where we can store the user authentication token
+  const [token, setToken]=useState(localStorage.getItem('token') ? localStorage.getItem('token'): false);
+
+
   // create arrow function where we will call the Api
   const getDoctorsData=async()=>{
     try {
@@ -40,7 +44,10 @@ const AppContextProvider = (props)=>{
   const value={
     // Whatever we add in the value obj, we can access that in any component.
     doctors,
-    currencySymbol
+    currencySymbol,
+    token,
+    setToken,
+    backendUrl
   }
   return(
     <AppContext.Provider value={value}>
