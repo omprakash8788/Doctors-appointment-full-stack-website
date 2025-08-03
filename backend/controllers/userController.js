@@ -2,6 +2,7 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import {v2 as cloudinary} from 'cloudinary'
 
 // API to register user
 const registerUser = async (req, res) => {
@@ -111,6 +112,70 @@ const loginUser = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+// API for get user profile data.
+const getProfile = async (req, res)=>{
+     try {
+      // In the try block, we will get the user id, and by using the user id we will get the user data and we will provide the user data to the frontend.
+
+      //so we will get the user id by using the authentication.
+      const {userId} = req.body; // we will not get the userId from the user, user will send the token and using that token we will get the userId. and we will add the user id in the req dot body.
+
+      // now to change the header to the userId, we are going to create one middleware with the name authUser.js
+
+      // {userId} = req.body --> after getting from req.body we have to find this user.
+
+      // To find the user, we have to get the user data.
+      const userData = await userModel.findById(userId).select('-password')
+
+      // .select('-password') --> It will removed the password property from the userData variable.
+      // After that we will create just one response
+      res.json({success:true, userData})
+      // so in res.json, we sending userData.
+      
+     } catch (error) {
+       console.log(error);
+       res.json({ success: false, message: error.message });
+     }
+}
+
+ 
+// API for update user profile.
+const updateProfile = async (req, res)=>{
+   try {
+     // To update the profile, first we need the data from the req.
+     const {userId, name, phone, address, dob, gender}=req.body;
+     //so, we also recevice image.
+     const imageFile = req.file;
+
+
+     //After that add check.
+     if(!name || !phone || !dob || !gender){
+         //if any of these property is not available then we will generate one response.
+         return res.json({success:false, message:"Data missing"})
+     }
+     await userModel.findByIdAndUpdate(userId, {name, phone, address:JSON.parse(address), dob, gender})
+
+     // userId, {name, phone, address:JSON.parse(address), dob, gender} -- Proving userId with other fields , so we can update the user info.
+
+     // After that we check image also.
+     if(imageFile){
+      // we will upload image on the cloudinary and save in the user data image property.
+
+      //upload image to cloudinary
+      const imageUpload = await cloudinary.uploader.upload(imageFile.path, {resource_type:'image'});
+
+      // After that you got image url, then you save in one variable.
+      const imageUrl= imageUpload.secure_url;
+      // Next, we have to save the imageUrl in the user data.
+      await userModel.findByIdAndUpdate(userId, {image:imageUrl})
+     }
+     res.json({success:true, message:"Profile Updated"})
+    
+   } catch (error) {
+     console.log(error);
+     res.json({ success: false, message: error.message });
+   }
+}
 
 // export the function.
-export { registerUser, loginUser };
+export { registerUser, loginUser,getProfile, updateProfile};
