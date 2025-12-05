@@ -72,3 +72,50 @@ This system provides:
 
 ## 🧬 System Architecture (Layered | Enterprise-Level)
 
+
+### ✔ Backend Layers
+- **Routes** – Endpoint definitions  
+- **Controllers** – Request/response handling  
+- **Services** – Business logic  
+- **Models** – MongoDB schemas  
+- **Middleware** – Authentication & validation  
+- **Config** – Database & environment setup  
+
+### ✔ Frontend Modules
+- Context API for global state  
+- Smart reusable UI components  
+- Doctor & patient dashboards  
+
+---
+
+## 📁 Folder Structure
+
+```text
+DOCTORS-APPOINTMENT/
+│
+├── backend/
+│   ├── configs/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── utils/
+│   ├── server.js
+│   └── package.json
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── context/
+│   │   └── utils/
+│   └── package.json
+│
+├── admin/
+│   ├── src/
+│   ├── components/
+│   └── pages/
+│
+└── README.md
+
+
