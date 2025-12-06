@@ -177,5 +177,8 @@ const updateProfile = async (req, res)=>{
    }
 }
 
+// API to book appointment 
+ 
+
 // export the function.
 export { registerUser, loginUser,getProfile, updateProfile};
