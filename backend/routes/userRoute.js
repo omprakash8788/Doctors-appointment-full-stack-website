@@ -1,5 +1,5 @@
 import express from 'express';
-import { getProfile, loginUser, registerUser, updateProfile } from '../controllers/userController.js';
+import { getProfile, loginUser, registerUser, updateProfile, bookAppointment } from '../controllers/userController.js';
 import authUser from '../middlewares/authUser.js';
 import upload from '../middlewares/multer.js';
 // create the instance of the router using express.
@@ -13,6 +13,8 @@ userRouter.get('/get-profile',authUser, getProfile)
 userRouter.post('/update-profile',upload.single('image'),authUser, updateProfile)
 //upload.single('image') --> upload is a middleware, single is a method, and inside single method we passing field name in which we send the image.
 // authUser - it is a middleware
+
+userRouter.post('/book-appointment', authUser, bookAppointment)
 
 
 // authUser- So whenever we call the API then we will provide the token in the header and then we will be able to get the user profile details.
