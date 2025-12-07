@@ -77,6 +77,7 @@ const AppContextProvider = (props)=>{
   const value={
     // Whatever we add in the value obj, we can access that in any component.
     doctors,
+    getDoctorsData,
     currencySymbol,
     token,
     setToken,
