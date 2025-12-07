@@ -233,16 +233,32 @@ const bookAppointment = async (req, res) => {
       amount: docData.fees,
       slotTime,
       slotDate,
-      date:Date.now()
+      date: Date.now(),
     };
     //After that saved these data into databased.
     const newAppointment = new appointmentModel(appointmentData);
     await newAppointment.save();
 
     //Saved new slots data in docData
-    await doctorModel.findByIdAndUpdate(docId, {slots_booked})
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked });
     // docId, {slots_booked} - using this it will update the slot for that specific doctor
-    res.json({success:true, message:"Appointment Book"})
+    res.json({ success: true, message: "Appointment Book" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+//API to get user appointment for frontend my-appointment page
+const listAppointment = async (req, res) => {
+  try {
+    //Fist get the user id from the request
+    const {userId}= req.body;
+    //After that store all the appointment of the user
+    const appointments = await appointmentModel.find({userId});
+    // userId - so when we created the data you can see in the databased appointment collection we have added the "userId" property by using this userid property to find the prticular user
+    //After that we need to send this data as a response
+    res.json({success:true, appointments})
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
@@ -250,4 +266,11 @@ const bookAppointment = async (req, res) => {
 };
 
 // export the function.
-export { registerUser, loginUser, getProfile, updateProfile, bookAppointment};
+export {
+  listAppointment,
+  registerUser,
+  loginUser,
+  getProfile,
+  updateProfile,
+  bookAppointment,
+};
