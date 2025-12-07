@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets_frontend/assets";
 import RelatedDoctors from "../components/RelatedDoctors";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Appoinment = () => {
   const { docId } = useParams();
@@ -10,7 +12,10 @@ const Appoinment = () => {
   // console.log(docInfo);
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-  const { doctors, currencySymbol } = useContext(AppContext);
+  const { doctors, currencySymbol, backendUrl, token, getDoctorsData } =
+    useContext(AppContext);
+  const navigate = useNavigate();
+
   // Doctor slot logic
   //1.
   const [docSlots, setDocSlots] = useState([]);
@@ -85,6 +90,46 @@ const Appoinment = () => {
       // When the while loop ended in that case we will save the time slots.
       setDocSlots((prev) => [...prev, timeSlots]);
       // now our function is ready to create slots.
+    }
+  };
+
+  // Function for book appointment
+  const bookAppointment = async () => { 
+    if (!token) {
+      toast.warn("Login to book appointment");
+      return navigate("/login");
+    }
+    try {
+      // First we will store the selected date in the date variable
+      const date = docSlots[slotIndex][0].datetime;
+      const day = date.getDate();
+      let month = date.getMonth() + 1;
+      let year = date.getFullYear();
+      //After getting the day, month, year, we will create the different format.
+      const slotDate = day + "_" + month + "_" + year;
+      //console.log(slotDate) // in console we get this ->  7_12_2025
+      // After  that make the API call
+      const { data } = await axios.post(
+        backendUrl + "/api/user/book-appointment",
+        { docId, slotDate, slotTime },
+        { headers:{ token}}
+      );
+      console.log(data)
+
+      //After that add the check
+      if (data.success) {
+        toast.success(data.message);
+        //After that we need to fetch the doctor data again, so doctor data will get upated.
+        getDoctorsData();
+        //Doing above thing we successfully book the appointment
+        //Then we need to render user to the "my appointment" page.
+        navigate("/my-appoinment");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -189,11 +234,16 @@ const Appoinment = () => {
             }
           </div>
           {/* button */}
-          <button className="bg-[var(--color-primary)] text-white text-sm font-light px-14 py-3 rounded-full my-6">Book an appointment</button>
+          <button
+            onClick={bookAppointment}
+            className="bg-[var(--color-primary)] text-white text-sm font-light px-14 py-3 rounded-full my-6"
+          >
+            Book an appointment
+          </button>
         </div>
         {/* Booking slot end here  */}
         {/* Listing Related Doctors */}
-        <RelatedDoctors docId={docId} speciality={docInfo.speciality}/>
+        <RelatedDoctors docId={docId} speciality={docInfo.speciality} />
       </div>
     )
   );
