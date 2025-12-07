@@ -1,5 +1,5 @@
 import express from 'express';
-import { getProfile, loginUser, registerUser, updateProfile, bookAppointment } from '../controllers/userController.js';
+import { getProfile, loginUser, registerUser, updateProfile, bookAppointment, listAppointment } from '../controllers/userController.js';
 import authUser from '../middlewares/authUser.js';
 import upload from '../middlewares/multer.js';
 // create the instance of the router using express.
@@ -15,7 +15,7 @@ userRouter.post('/update-profile',upload.single('image'),authUser, updateProfile
 // authUser - it is a middleware
 
 userRouter.post('/book-appointment', authUser, bookAppointment)
-
+userRouter.get('/appointments',authUser ,listAppointment)
 
 // authUser- So whenever we call the API then we will provide the token in the header and then we will be able to get the user profile details.
 
