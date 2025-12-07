@@ -266,7 +266,7 @@ const listAppointment = async (req, res) => {
 };
 
 //API to cancel appointment
-const cancelAppointment = async () => {
+const cancelAppointment = async (req, res) => {
   try {
     // First we will get userId and appointmentId from the request.
     const { userId, appoitnmentId } = req.body;
@@ -299,6 +299,8 @@ const cancelAppointment = async () => {
     res.json({ success: false, message: error.message });
   }
 };
+
+// 
 
 // export the function.
 export {
