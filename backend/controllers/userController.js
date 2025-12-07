@@ -265,8 +265,14 @@ const listAppointment = async (req, res) => {
   }
 };
 
+//API to cancel appointment
+const cancelAppointment=async()=>{
+
+}
+
 // export the function.
 export {
+  cancelAppointment,
   listAppointment,
   registerUser,
   loginUser,

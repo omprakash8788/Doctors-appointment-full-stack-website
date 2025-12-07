@@ -7,11 +7,32 @@ import { toast } from "react-toastify";
 
 const MyAppoinment = () => {
   const { backendUrl, token } = useContext(AppContext);
-  // Removed - doctors( why - that was hard coded)
-  //Add backendUrl and token - by using this we will make the api call and display the appointment data
+
   // After that we have to create the state variable to store the data
   const [appointment, setAppointment] = useState([]);
-  console.log(appointment);
+  const months = [
+    " ",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const slotDateFormat = (slotDate) => {
+    const dateArray = slotDate.split("_");
+    return (
+      dateArray[0]+ " " + months[Number(dateArray[1])] + " " + dateArray[2]
+    );
+  };
+
   const getUserAppointments = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/user/appointments", {
@@ -68,7 +89,7 @@ const MyAppoinment = () => {
                     Date & Time :{" "}
                   </span>
                   {/* 25 june 2025 | 6:20 AM */}
-                  {item.slotDate} | {item.slotTime}
+                  {slotDateFormat(item.slotDate)} | {item.slotTime}
                 </p>
               </div>
               {/* In this div we will not add anythings in this one we will add the structure so that we can make this component responsive */}
