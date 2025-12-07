@@ -253,12 +253,12 @@ const bookAppointment = async (req, res) => {
 const listAppointment = async (req, res) => {
   try {
     //Fist get the user id from the request
-    const {userId}= req.body;
+    const { userId } = req.body;
     //After that store all the appointment of the user
-    const appointments = await appointmentModel.find({userId});
+    const appointments = await appointmentModel.find({ userId });
     // userId - so when we created the data you can see in the databased appointment collection we have added the "userId" property by using this userid property to find the prticular user
     //After that we need to send this data as a response
-    res.json({success:true, appointments})
+    res.json({ success: true, appointments });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
@@ -266,9 +266,39 @@ const listAppointment = async (req, res) => {
 };
 
 //API to cancel appointment
-const cancelAppointment=async()=>{
+const cancelAppointment = async () => {
+  try {
+    // First we will get userId and appointmentId from the request.
+    const { userId, appoitnmentId } = req.body;
+    //now we will get the appointmentId from the users request body and we provide this userId with authentication middleware
+    const appointmentData = await appointmentModel.findById(appoitnmentId);
+    //Next, we have to check this appointmentData user id same with the appointmentId then user can cancel the appointment
+    //verify appointment user
+    if (appointmentData.userId !== userId) {
+      return res.json({ success: false, message: "Unauthorized action" });
+    }
+    // if user id match perform next task
+    await appointmentModel.findByIdAndUpdate(appoitnmentId, {
+      cancelled: true,
+    });
+    //Note - cancelled --> this propeerty is inside appointmentModel so by defaut it is false , so if user cancel make it true
+    // Releasing doctor slots
+    //here first get the doctor id , slot date and slot time
+    const {docId, slotDate, slotTime} = appointmentData;
+    //After that find the doctor using docId
+    const doctorData = await doctorModel.findById(docId);
+    // Next, we extract the slot booked data
+    let slots_booked = doctorData.slots_booked;
+    slots_booked[slotDate]=slots_booked[slotDate].filter(e=> e!==slotTime);
+    //After that we have to update the latest slot data with the doctors data
+    await doctorModel.findByIdAndUpdate(docId, {slots_booked})
+    res.json({success:true, message:"Appointment cancelled"})
 
-}
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
 
 // export the function.
 export {
