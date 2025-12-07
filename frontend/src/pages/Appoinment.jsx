@@ -77,12 +77,31 @@ const Appoinment = () => {
           hour: "2-digit",
           minute: "2-digit",
         });
-        // store this data in the variable
-        //add slot to array.
-        timeSlots.push({
-          datetime: new Date(currentDate),
-          time: formattedTime,
-        });
+
+        // Logic to hidden booked slot
+        let day = currentDate.getDate();
+        let month = currentDate.getMonth() + 1;
+        let year = currentDate.getFullYear();
+        // so in this while loop we created these variables so if our current date will be changed then in case here we will check doctor has book any slot on these date or not if it book then we will not push those date in the timeSlots array.
+        const slotDate = day + "_" + month + "_" + year;
+        const slotTime = formattedTime;
+        //After that check doctor data
+        const isSlotAvailable =
+          docInfo.slots_booked[slotDate] &&
+          docInfo.slots_booked[slotDate].includes(slotTime)
+            ? false
+            : true;
+        // docInfo.slots_booked[slotDate] && docInfo.slots_booked[slotDate].includes(slotTime) - If both statement is true then in that case we will not add in slotTime , and any of these satement were false then we will know slot is available that why we provided true.
+
+        if (isSlotAvailable) {
+          // store this data in the variable
+          //add slot to array.
+          timeSlots.push({
+            datetime: new Date(currentDate),
+            time: formattedTime,
+          });
+        }
+
         // After saving the time and date we will increment time by 30 minute
         // Increment current time by 30 minute.
         currentDate.setMinutes(currentDate.getMinutes() + 30);
@@ -94,7 +113,7 @@ const Appoinment = () => {
   };
 
   // Function for book appointment
-  const bookAppointment = async () => { 
+  const bookAppointment = async () => {
     if (!token) {
       toast.warn("Login to book appointment");
       return navigate("/login");
@@ -112,9 +131,9 @@ const Appoinment = () => {
       const { data } = await axios.post(
         backendUrl + "/api/user/book-appointment",
         { docId, slotDate, slotTime },
-        { headers:{ token}}
+        { headers: { token } }
       );
-      console.log(data)
+      console.log(data);
 
       //After that add the check
       if (data.success) {
