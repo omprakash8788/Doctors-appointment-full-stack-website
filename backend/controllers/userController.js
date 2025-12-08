@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
-import razorpay from 'razorpay';
+import razorpay from "razorpay";
 
 // API to register user
 const registerUser = async (req, res) => {
@@ -285,16 +285,17 @@ const cancelAppointment = async (req, res) => {
     //Note - cancelled --> this propeerty is inside appointmentModel so by defaut it is false , so if user cancel make it true
     // Releasing doctor slots
     //here first get the doctor id , slot date and slot time
-    const {docId, slotDate, slotTime} = appointmentData;
+    const { docId, slotDate, slotTime } = appointmentData;
     //After that find the doctor using docId
     const doctorData = await doctorModel.findById(docId);
     // Next, we extract the slot booked data
     let slots_booked = doctorData.slots_booked;
-    slots_booked[slotDate]=slots_booked[slotDate].filter(e=> e!==slotTime);
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (e) => e !== slotTime
+    );
     //After that we have to update the latest slot data with the doctors data
-    await doctorModel.findByIdAndUpdate(docId, {slots_booked})
-    res.json({success:true, message:"Appointment cancelled"})
-
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+    res.json({ success: true, message: "Appointment cancelled" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
@@ -303,19 +304,37 @@ const cancelAppointment = async (req, res) => {
 
 // Razorpay instance
 const razorpayInstance = new razorpay({
-  key_id:process.env.Razorpay_key_id,
-  key_secret:process.env.Razorpay_key_secret
-})
+  key_id: process.env.Razorpay_key_id,
+  key_secret: process.env.Razorpay_key_secret,
+});
 
 // API to make payment of appointment using razorpay
-const paymentRazorpay=async(req, res)=>{
-  //To booked the online appointment we need appointment id 
-  const {appoitnmentId} = req.body;
-  //After that we have to get the appointment data using this appointmentid,
-  const appointmentData = await appointmentModel.findById(appoitnmentId);
-  
-
-}
+const paymentRazorpay = async (req, res) => {
+  try {
+    //To booked the online appointment we need appointment id
+    const { appoitnmentId } = req.body;
+    //After that we have to get the appointment data using this appointmentid,
+    const appointmentData = await appointmentModel.findById(appoitnmentId);
+    //After getting appointment data first we will check appointment data
+    if (!appointmentData || appointmentData.cancelled) {
+      return res.json({ success: false, message: "Appointment not found" });
+    }
+    //create option for razorpay payment
+    // in .env file add this line CURRENCY="INR"
+    const options = {
+      amount: appointmentData.amount * 100,
+      currency: "INR",
+      receipt: appoitnmentId,
+    };
+    // by using options variable we will create one order using razorpay
+    // Creation of an order
+    const order = await razorpayInstance.orders.create(options);
+    res.json({ success: true, order });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
 
 // export the function.
 export {
