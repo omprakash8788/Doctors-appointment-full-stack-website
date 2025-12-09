@@ -4,6 +4,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import {useNavigate} from "react-router-dom";
+
 const MyAppoinment = () => {
   const { backendUrl, token, getDoctorsData} = useContext(AppContext);
   // After that we have to create the state variable to store the data
@@ -23,6 +25,8 @@ const MyAppoinment = () => {
     "Nov",
     "Dec",
   ];
+  const navigate = useNavigate();
+  
   const slotDateFormat = (slotDate) => {
     const dateArray = slotDate.split("_");
     return (
@@ -77,7 +81,16 @@ const MyAppoinment = () => {
       receipt:order.receipt,
       handler: async(response)=>{
         console.log(response)
-
+        try {
+          const {data}= await axios.post(backendUrl + "/api/user/verifyRazorpay", response, {headers:{token}});
+          if(data.success){
+            getUserAppointments();
+            navigate('/my-appoinment')
+          }
+        } catch (error) {
+          console.log(error)
+          toast.error(error.message)
+        }
       }
     }
     const rzp = new window.Razorpay(options);
@@ -146,8 +159,11 @@ const MyAppoinment = () => {
               {/* In this div we will not add anythings in this one we will add the structure so that we can make this component responsive */}
               <div></div>
               <div className="flex flex-col gap-2 justify-end">
+                {
+                  !item.cancelled && item.payment && <button className="sm:min-w-48 py-2 border rounded text-stone-500 bg-indigo-100">Paid</button>
+                }
 
-                {!item.cancelled && 
+                {!item.cancelled &&  !item.payment &&
                 <button onClick={()=>appointmentRazorpay(item._id)} className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-blue-800 hover:text-white transition-all duration-300">
                   Pay Online
                 </button>
