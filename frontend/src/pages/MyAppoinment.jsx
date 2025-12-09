@@ -64,13 +64,33 @@ const MyAppoinment = () => {
     }
   };
 
+  // Init pay
+  const initPay = (order)=>{
+    //order - we are getting from the api response
+    const options={
+      key:import.meta.env.VITE_Razorpay_key_id,
+      amount:order.amount,
+      currency:order.currency,
+      name:"Appointment payment",
+      description:"Appointment payment",
+      order_id:order.id,
+      receipt:order.receipt,
+      handler: async(response)=>{
+        console.log(response)
+
+      }
+    }
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  }
   const appointmentRazorpay=async(appoitnmentId)=>{
    try {
     //appoitnmentId 
     const {data} = await axios.post(backendUrl + "/api/user/payment-razorpay", {appoitnmentId},{headers:{token}});
-    console.log("line 71", data)
     if(data.success){
-      console.log(data.order)
+      // console.log(data.order)
+      initPay(data.order)
+
     }
    } catch (error) {
          console.log(error);
