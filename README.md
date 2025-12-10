@@ -72,6 +72,8 @@ This system provides:
 ---
 
 ## 🧬 System Architecture (Layered | Enterprise-Level)
+<img width="1400" height="790" alt="image" src="https://github.com/user-attachments/assets/5cc233f5-3bcf-4ec0-abdf-4cb9fd92f822" />
+
  (upcoming)
 
 ### ✔ Backend Layers
