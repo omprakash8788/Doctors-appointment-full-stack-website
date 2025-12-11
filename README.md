@@ -18,6 +18,7 @@
 A robust **end-to-end healthcare management system** built using the **MERN stack**, designed for real clinic workflows.  
 This platform enables **patients** to book appointments, while **doctors/admins** manage schedules, availability, and approvals.
 
+
 Built with enterprise-level standards:
 - Clean & scalable architecture  
 - Secure authentication  
