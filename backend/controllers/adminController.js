@@ -2,7 +2,8 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
+import appointmentModel from "../models/appointmentModel.js";
 
 //API for adding doctor
 const addDoctor = async (req, res) => {
@@ -99,60 +100,64 @@ const addDoctor = async (req, res) => {
       date: Date.now(),
     };
     // After that store doctorData in obj.
-    const newDoctor = new doctorModel(doctorData)
+    const newDoctor = new doctorModel(doctorData);
     // After adding this we have to save newDoctor in the database.
     await newDoctor.save(); // After this line our data will be save in database.
-    res.json({success:true, message:"Doctor Added"})
-
+    res.json({ success: true, message: "Doctor Added" });
   } catch (error) {
     console.log(error);
-    res.json({success:false, message:error.message})
+    res.json({ success: false, message: error.message });
+  }
+};
+// API for the admin login.
+const loginAdmin = async (req, res) => {
+  try {
+    // in this try block we first get the email ID and password from the request. And we will match the email ID and password with this .env variable of the admin email and password.
+    // If it is matching in that case we will create a token using the jsonwentoken.
+
+    //So, first here we will get the email id and password.
+    const { email, password } = req.body;
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      // if both the condition true then we will generate token.
+      // create token and send to the user.
+      const token = jwt.sign(email + password, process.env.JWT_SECRET);
+      // sign() ->>> here we have to provide one data so we can encrypt the data and create a token
+      // email+password => this will be string
+      // jwt.sign(email+password, process.env.JWT_SECRET) --> By excauting this statenent we will get a token.
+      // Next, we have to send this token as a response.
+      res.json({ success: true, token });
+      //Next test this API.
+    } else {
+      res.json({ success: false, message: "Invalid credentials" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+// API to get all doctors list for admin panel
+const allDoctors = async (req, res) => {
+  try {
+    const doctors = await doctorModel.find({}).select("-password");
+    //.select('-password') - i dont need password so i just write .select('-password');
+    res.json({ success: true, doctors });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+//Api to get all appointmemt list
+const appointmentsAdmin = async (req, res) => {
+  try {
+    const appointments = await appointmentModel.find({}); // here you will get all the appointment
+    res.json({ success: true, appointments });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
   }
 };
 
-
-// API for the admin login.
-const loginAdmin= async(req, res)=>{
-     try {
-        // in this try block we first get the email ID and password from the request. And we will match the email ID and password with this .env variable of the admin email and password.
-        // If it is matching in that case we will create a token using the jsonwentoken.
-        
-        //So, first here we will get the email id and password.
-        const {email, password}=req.body;
-        if(email===process.env.ADMIN_EMAIL && password===process.env.ADMIN_PASSWORD){
-            // if both the condition true then we will generate token.
-            // create token and send to the user.
-            const token = jwt.sign(email+password, process.env.JWT_SECRET)
-            // sign() ->>> here we have to provide one data so we can encrypt the data and create a token
-            // email+password => this will be string 
-           // jwt.sign(email+password, process.env.JWT_SECRET) --> By excauting this statenent we will get a token.
-           // Next, we have to send this token as a response.
-           res.json({success:true, token})
-           //Next test this API.
-
-        }else{
-            res.json({success:false, message:"Invalid credentials"})
-        }
-
-        
-     } catch (error) {
-        console.log(error)
-       res.json({success:false, message:error.message})
-
-        
-     }
-}
-
-// API to get all doctors list for admin panel
-const allDoctors=async(req, res)=>{
-  try {
-    const doctors=await doctorModel.find({}).select('-password')
-    //.select('-password') - i dont need password so i just write .select('-password');
-     res.json({success:true, doctors})
-  }  catch (error) {
-        console.log(error)
-       res.json({success:false, message:error.message})
-     }
-}
-
-export { addDoctor, loginAdmin,allDoctors };
+export { addDoctor, loginAdmin, allDoctors, appointmentsAdmin };
