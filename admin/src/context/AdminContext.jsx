@@ -18,9 +18,8 @@ const AdminContextProvider = (props) => {
 
   // 1.
   const [doctors, setDoctors]=useState([])
-
+  const [appointments, setAppointments] = useState([])
   const backendUrl = import.meta.env.VITE_BACKENDURL;
-
   // getAllDoctors from the Api.
   const getAllDoctors=async()=>{
     try {
@@ -38,11 +37,6 @@ const AdminContextProvider = (props) => {
       
     }
   }
-
-  // useEffect(()=>{
-  // getAllDoctors();
-  // },[])
-
   // Function for update checkbox property
   const changeAvailability = async(docId)=>{
     try {
@@ -66,6 +60,25 @@ const AdminContextProvider = (props) => {
     }
   }
 
+  // getAll appointment function
+  const getAllAppointments = async()=>{
+    try {
+      const {data} = await axios.get(backendUrl + "/api/admin/appointments", {headers:{aToken}});
+      //After that you get response where you have all data.
+      //Then create state to store those data.
+     if(data.success){
+      setAppointments(data.appointments)
+     }else{
+      toast.error(data.message)
+     }
+    } catch (error) {
+      toast.error(error.message)
+      console.log(error)
+
+    }
+  }
+
+
   const value = {
     //  So whenever we will add any function and variable value here then we can access in the any component using the AdminContext.
     //1.b---> pass value here
@@ -75,6 +88,9 @@ const AdminContextProvider = (props) => {
     doctors,
     getAllDoctors,
     changeAvailability,
+    appointments,
+    setAppointments,
+    getAllAppointments
     
   };
   //3
