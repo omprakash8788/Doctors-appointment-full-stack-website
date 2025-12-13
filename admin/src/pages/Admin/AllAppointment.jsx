@@ -6,7 +6,7 @@ import { AppContext } from "../../context/AppContext";
 import { assets } from "../../assets_admin/assets";
 
 const AllAppointment = () => {
-  const { aToken, appointments, setAppointments, getAllAppointments } =
+  const { aToken, appointments, getAllAppointments } =
     useContext(AdminContext);
   const { calculateAge, slotDateFormat } = useContext(AppContext);
   // console.log(appointments);
@@ -58,11 +58,15 @@ const AllAppointment = () => {
               <p>{item.docData.name}</p>
             </div>
             <p>$ {item.docData.fees}</p>
-            <img
-              className="w-10 cursor-pointer"
-              src={assets.cancel_icon}
-              alt="can"
-            />
+            {item.cancelled ? (
+              <p className="text-red-400 text-xs font-medium">Cancelled</p>
+            ) : (
+              <img
+                className="w-10 cursor-pointer"
+                src={assets.cancel_icon}
+                alt="can"
+              />
+            )}
           </div>
         ))}
       </div>
