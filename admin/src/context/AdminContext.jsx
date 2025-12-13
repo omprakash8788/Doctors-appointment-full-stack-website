@@ -78,10 +78,26 @@ const AdminContextProvider = (props) => {
     }
   }
 
+  const cancelAppointment = async(appoitnmentId)=>{
+    try {
+      const {data} = await axios.post(backendUrl + "/api/admin/cancel-appointment", {appoitnmentId}, {headers:{aToken}})
+      if(data.success){
+        toast.success(data.message)
+        getAllAppointments()
+      }else{
+        toast.error(data.message)
+      }
+    } catch (error) {
+       toast.error(error.message)
+      console.log(error)
+    }
+  }
+
 
   const value = {
     //  So whenever we will add any function and variable value here then we can access in the any component using the AdminContext.
     //1.b---> pass value here
+    cancelAppointment,
     aToken,
     setAToken,
     backendUrl,
