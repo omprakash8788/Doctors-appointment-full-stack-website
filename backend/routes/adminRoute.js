@@ -3,6 +3,7 @@ import express from "express";
 import {
   addDoctor,
   allDoctors,
+  appointmentCancellation,
   appointmentsAdmin,
   loginAdmin,
 } from "../controllers/adminController.js";
@@ -28,6 +29,7 @@ adminRouter.post("/all-doctors", authAdmin, allDoctors);
 // API endpoint for change availablity status in backend.
 adminRouter.post("/change-availability", authAdmin, changeAvailablity);
 adminRouter.get("/appointments", authAdmin, appointmentsAdmin)
+adminRouter.post("/cancel-appointment", authAdmin, appointmentCancellation)
 
 // After that export adminRouter.
 export default adminRouter;
