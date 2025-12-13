@@ -159,5 +159,43 @@ const appointmentsAdmin = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+//Api for appointment cancellation
+const appointmentCancellation = async (req, res) => {
+  try {
+    // First we will get userId and appointmentId from the request.
+    const { appoitnmentId } = req.body;
+    //now we will get the appointmentId from the users request body and we provide this userId with authentication middleware
+    const appointmentData = await appointmentModel.findById(appoitnmentId);
+    //Next, we have to check this appointmentData user id same with the appointmentId then user can cancel the appointment
 
-export { addDoctor, loginAdmin, allDoctors, appointmentsAdmin };
+    // if user id match perform next task
+    await appointmentModel.findByIdAndUpdate(appoitnmentId, {
+      cancelled: true,
+    });
+    //Note - cancelled --> this propeerty is inside appointmentModel so by defaut it is false , so if user cancel make it true
+    // Releasing doctor slots
+    //here first get the doctor id , slot date and slot time
+    const { docId, slotDate, slotTime } = appointmentData;
+    //After that find the doctor using docId
+    const doctorData = await doctorModel.findById(docId);
+    // Next, we extract the slot booked data
+    let slots_booked = doctorData.slots_booked;
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (e) => e !== slotTime
+    );
+    //After that we have to update the latest slot data with the doctors data
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+    res.json({ success: true, message: "Appointment cancelled" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export {
+  addDoctor,
+  loginAdmin,
+  allDoctors,
+  appointmentsAdmin,
+  appointmentCancellation,
+};
