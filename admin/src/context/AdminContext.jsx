@@ -39,6 +39,7 @@ const AdminContextProvider = (props) => {
       
     }
   }
+
   // Function for update checkbox property
   const changeAvailability = async(docId)=>{
     try {
@@ -97,7 +98,7 @@ const AdminContextProvider = (props) => {
 
   const getDashData = async()=>{
     try {
-      const {data} = axios.get(backendUrl + "/api/admin/dashboard", {headers:{aToken}})
+      const {data} =await axios.get(backendUrl + "/api/admin/dashboard", {headers:{aToken}})
        if(data.success){
         setDashData(data.dashData)
         //dashData
