@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { AdminContext } from "../context/AdminContext";
 import axios from 'axios'
 import { toast } from "react-toastify";
+import { DoctorContext } from "../context/DoctorContext";
 
 const Login = () => {
   // here We will create one state variable and by using that we will manage the admin login and doctor login
@@ -18,6 +19,7 @@ const Login = () => {
   // After that we will de-structure the backend url
  // By using this "{setAToken, backendUrl}" we called the API in this page.
 
+ const {setDToken} = useContext(DoctorContext)
 //  so, before calling the API we will create two state variable to store the email id and password.
  
 //  now create funnction for this form, so when we submit jsx form then that function will be excauted.
@@ -40,6 +42,16 @@ try {
 
   }else{
     // here we will call the doctor login api
+    const {data} = await axios.post(backendUrl + "/api/doctor/login", {email, password});
+    if(data.success){
+      // console.log(data.token)
+      localStorage.setItem('DToken', data.token)
+      setDToken(data.token) // before that also set in local storage
+    }else{
+      toast.error(data.message)
+    }
+
+
 
   }
   
