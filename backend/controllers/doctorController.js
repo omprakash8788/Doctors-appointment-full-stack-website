@@ -1,42 +1,71 @@
 import doctorModel from "../models/doctorModel.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-
-
-const changeAvailablity = async(req, res)=>{
+const changeAvailablity = async (req, res) => {
   try {
-       // in this block add the logic
+    // in this block add the logic
     //1    first get the doctor id.
-    const {docId}=req.body;
+    const { docId } = req.body;
     //2. After that we had to find the doctors data using the "docId"
-    const docData= await doctorModel.findById(docId)
+    const docData = await doctorModel.findById(docId);
     //3. After that check doctor avaliable property
-    await doctorModel.findByIdAndUpdate(docId,{available:!docData.available})
+    await doctorModel.findByIdAndUpdate(docId, {
+      available: !docData.available,
+    });
     // (docId,{available:!docData.available}) -- It means which property we want to update so in our case we want to update available property.
 
     //4. After that we had to send response.
-    res.json({success:true, message:"Availablity Changed"})
-    
-
+    res.json({ success: true, message: "Availablity Changed" });
   } catch (error) {
-       console.log(error)
-       res.json({success:false, message:error.message})
+    console.log(error);
+    res.json({ success: false, message: error.message });
   }
-}
+};
 
-// here we will create one function so that we will get the all doctors in the frontend 
+// here we will create one function so that we will get the all doctors in the frontend
 
-const doctorList=async(req, res)=>{
+const doctorList = async (req, res) => {
   try {
-    const doctors=await doctorModel.find({}).select(['-password', '-email'])
+    const doctors = await doctorModel.find({}).select(["-password", "-email"]);
     // find({}) -- here we get all doctors
     //.select(['-password', '-email']) ===>>> now from the doctors data we need to remove doctors passsword and email property, so we will not get the email and password of the doctor on the frontend api.
 
     // Next create the response
-    res.json({success:true, doctors})
+    res.json({ success: true, doctors });
   } catch (error) {
-    console.log(error)
-    res.json({success:false, message:error.message})
+    console.log(error);
+    res.json({ success: false, message: error.message });
   }
-}
+};
 
-export {changeAvailablity, doctorList}
+// API for doctor login
+const loginDoctor = async (req, res) => {
+  try {
+    //First we will get email id and password from request.
+    const { email, password } = req.body;
+    //After that find the doctor using above email id.
+    const doctor = await doctorModel.findOne({ email });
+    // After that we will get the doctor.
+    //add check
+    if (!doctor) {
+      return res.json({ success: false, message: "Invalid credentials" });
+    }
+    //Suppose, we find any doctor with provided email id then we will check password that recevice from the body is matching with the password saved in the db.
+    const isMatch = await bcrypt.compare(password, doctor.password);
+    //password - this is getting from the request.
+    // doctor.password - this is hash password from the db()
+    if (isMatch) {
+      // if it is true then we provide authentication token
+      const token = await jwt.sign({ id: doctor._id }, process.env.JWT_SECRET);
+      res.json({ success: true, token });
+    } else {
+      res.json({ success: false, message: "Invalid credentials" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export { changeAvailablity, doctorList, loginDoctor };
