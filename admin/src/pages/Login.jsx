@@ -47,6 +47,7 @@ try {
       // console.log(data.token)
       localStorage.setItem('DToken', data.token)
       setDToken(data.token) // before that also set in local storage
+      console.log(data.token)
     }else{
       toast.error(data.message)
     }
