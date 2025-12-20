@@ -35,6 +35,26 @@ const AppContextProvider = (props) => {
   return age;
 };
 
+const calculateAge1 = (dob) => {
+  if (!dob) return "N/A";
+  // dob = "2004-01-13"
+  const [year, month, day] = dob.split("-");
+  const birthDate = new Date(year, month - 1, day);
+  if (isNaN(birthDate.getTime())) return "N/A";
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+  return age;
+};
+
+
+
   const months = [
     " ",
     "Jan",
@@ -61,7 +81,8 @@ const AppContextProvider = (props) => {
   const value = {
     //  So whenever we will add any function and variable value here then we can access in the any component using the AppContext.
     calculateAge,
-    slotDateFormat
+    slotDateFormat,
+   calculateAge1
   };
   //3
   return (

@@ -2,8 +2,11 @@ import React from "react";
 import { useContext } from "react";
 import { DoctorContext } from "../../context/DoctorContext";
 import { useEffect } from "react";
+import { AppContext } from "../../context/AppContext";
+import { assets } from "../../assets_admin/assets";
 const DoctorAppointment = () => {
   const { dToken, appointments, getAppointment } = useContext(DoctorContext);
+  const {calculateAge1,  slotDateFormat}=useContext(AppContext)
   console.log(appointments);
   useEffect(() => {
     if (dToken) {
@@ -22,6 +25,28 @@ const DoctorAppointment = () => {
         <p>Fees</p>
         <p>Action</p>
       </div>
+      {/* display data */}
+      {
+        appointments.map((item, index)=>(
+          <div key={index} className="flex flex-wrap justify-between max-sm:gap-5 max-sm:text-base sm:grid grid-cols-[0.5fr_2fr_1fr_1fr_3fr_1fr_1fr] gap-1 items-center text-gray-500 py-3 px-6 border-b hover:bg-gray-50">
+              <p className="max-sm:hidden">{index+1}</p>
+              <div className="flex items-center gap-2">
+                <img className="w-8 rounded-full" src={item.userData.image} alt="img" />
+                <p className="">{item.userData.name}</p>
+              </div>
+              <div>
+                <p className="text-xs inline border border-purple-500 px-2 rounded-full">{item.payment ? "Online" : "CASH"}</p>
+              </div>
+              <p className="max-sm:hidden">{calculateAge1(item.userData.dob)}</p>
+              <p>{slotDateFormat(item.slotDate)}, {item.slotTime}</p>
+              <p>$ {item.amount}</p>
+              <div className="flex">
+                <img className="w-10 cursor-pointer" src={assets.cancel_icon} alt="icon" />
+                <img className="w-10 cursor-pointer" src={assets.tick_icon} alt="icon" />
+              </div>
+          </div>
+        ))
+      }
     </div>
   </div>;
 };
