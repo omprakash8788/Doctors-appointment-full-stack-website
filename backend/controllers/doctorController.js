@@ -144,7 +144,6 @@ const doctorDashboard = async (req, res) => {
       if (!patients.includes(item.userId)) {
         // What - here we are checking first , in item.userId available in that patients array then we are not going to add those patients ,if not is not available then we will add those patients, so we will get total number of unique patients
         patients.push(item.userId);
-        
       }
     });
     //dashbaord data
@@ -161,7 +160,36 @@ const doctorDashboard = async (req, res) => {
   }
 };
 
+//Api to get doctor profile for doctor panel.
+const doctorProfile = async (req, res) => {
+  try {
+    const { docId } = req.body;
+    //We will get docId from the request.
+    //After getting doctor id we will get doctor profile data using id.
+    const profileData = await doctorModel.findById(docId).select("-password");
+    //After profile data , send response
+    res.json({ success: true, profileData });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+//API to update doctor profile data from Doctor panel.
+const updateDoctorProfile = async (req, res) => {
+  try {
+    const {docId, fees, available, address}=req.body;
+    //docId, fees, available, address - doctor can update these property.
+    await doctorModel.findByIdAndUpdate(docId, {fees, address, available})
+    res.json({success:true, message:"Profile updated"})
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
 export {
+  updateDoctorProfile,
+  doctorProfile,
   doctorDashboard,
   appointmentCancel,
   appointmentComplete,
