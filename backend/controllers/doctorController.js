@@ -103,7 +103,23 @@ const appointmentComplete = async (req, res) => {
 };
 //API to cancel appointment for doctor panel.
 const appointmentCancel=async(req, res)=>{
-
+   try {
+    const { docId, appoitnmentId } = req.body;
+    //We will get this "docId" from the authDoctor middleware where we convert the token into doctor id. And we pass this appointment id in Api request.
+    const appointmentData = await appointmentModel.findById(appoitnmentId);
+    if (appointmentData && appointmentData.docId === docId) {
+      // appointmentData && appointmentData.docId === docId -> In that case we authenticate the same doctor has loggined with whom appointment is book.
+      await appointmentModel.findByIdAndUpdate(appoitnmentId, {
+         cancelled: true,
+      });
+      return res.json({ success: true, message: "Appointment Cancelled" });
+    } else {
+      return res.json({ success: false, message: "Cancellation Failed" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
 }
 
 export {
