@@ -144,6 +144,7 @@ const doctorDashboard = async (req, res) => {
       if (!patients.includes(item.userId)) {
         // What - here we are checking first , in item.userId available in that patients array then we are not going to add those patients ,if not is not available then we will add those patients, so we will get total number of unique patients
         patients.push(item.userId);
+        
       }
     });
     //dashbaord data
