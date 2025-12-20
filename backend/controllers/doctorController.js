@@ -102,15 +102,15 @@ const appointmentComplete = async (req, res) => {
   }
 };
 //API to cancel appointment for doctor panel.
-const appointmentCancel=async(req, res)=>{
-   try {
+const appointmentCancel = async (req, res) => {
+  try {
     const { docId, appoitnmentId } = req.body;
     //We will get this "docId" from the authDoctor middleware where we convert the token into doctor id. And we pass this appointment id in Api request.
     const appointmentData = await appointmentModel.findById(appoitnmentId);
     if (appointmentData && appointmentData.docId === docId) {
       // appointmentData && appointmentData.docId === docId -> In that case we authenticate the same doctor has loggined with whom appointment is book.
       await appointmentModel.findByIdAndUpdate(appoitnmentId, {
-         cancelled: true,
+        cancelled: true,
       });
       return res.json({ success: true, message: "Appointment Cancelled" });
     } else {
@@ -120,9 +120,49 @@ const appointmentCancel=async(req, res)=>{
     console.log(error);
     res.json({ success: false, message: error.message });
   }
-}
+};
+
+// API to get dashboard data for doctor panel.
+const doctorDashboard = async (req, res) => {
+  try {
+    //First we will get the doctor id from the request
+    const { docId } = req.body;
+    const appointments = await appointmentModel.find({ docId });
+
+    let earnings = 0;
+    //by using "appointments", we will calculate the earning of this doctor.
+    appointments.map((item) => {
+      if (item.isCompleted || item.payment) {
+        earnings += item.amount;
+      }
+    });
+    //count number of paients.
+    let patients = [];
+
+    // to calculate the total number of unique patients
+    appointments.map((item) => {
+      if (!patients.includes(item.userId)) {
+        // What - here we are checking first , in item.userId available in that patients array then we are not going to add those patients ,if not is not available then we will add those patients, so we will get total number of unique patients
+        patients.push(item.userId);
+        
+      }
+    });
+    //dashbaord data
+    const dashData = {
+      earnings,
+      appointments: appointments.length,
+      patients: patients.length,
+      latestAppointments: appointments.reverse().slice(0, 5),
+    };
+    res.json({ success: true, dashData });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
 
 export {
+  doctorDashboard,
   appointmentCancel,
   appointmentComplete,
   changeAvailablity,
