@@ -26,7 +26,9 @@ const DoctorContextProvider = (props) => {
         { headers: { dToken } }
       );
       if (data.success) {
-        setAppointments(data.appointments.reverse());
+        // setAppointments(data.appointments.reverse());
+        setAppointments(data.appointments);
+
       } else {
         toast.error(data.message);
       }
