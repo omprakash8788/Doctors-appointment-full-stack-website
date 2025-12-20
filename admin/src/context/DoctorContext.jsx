@@ -18,7 +18,7 @@ const DoctorContextProvider = (props) => {
 
   const [appointments, setAppointments] = useState([]);
   console.log(appointments);
-  const [dashData, setDashData]=useState([]);
+  const [dashData, setDashData] = useState([]);
 
   const getAppointment = async () => {
     try {
@@ -77,23 +77,23 @@ const DoctorContextProvider = (props) => {
       toast.error(error.message);
     }
   };
-
-  const getDashData = async()=>{
+//dashboard
+  const getDashData = async () => {
     try {
-      const {data} = await axios.get(backendUrl + "/api/doctor/dashboard", {headers:{dToken}})
-      if(data.success){
-        setDashData(data.dashData)
-      }else{
-        toast.error(data.message)
+      const { data } = await axios.get(backendUrl + "/api/doctor/dashboard", {
+        headers: { dToken },
+      });
+      console.log("line 84", data);
+      if (data.success) {
+        setDashData(data.dashData);
+      } else {
+        toast.error(data.message);
       }
-      
     } catch (error) {
-         console.log(error);
+      console.log(error);
       toast.error(error.message);
     }
-  }
-
-
+  };
 
   //here create one variable with the name value and it is going to be a object.
 
