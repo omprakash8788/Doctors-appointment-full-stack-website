@@ -1,16 +1,13 @@
 import React, { useContext, useState } from "react";
-// import { assets } from "../assets/assets_frontend/assets";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets_frontend/assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const MyProfile = () => {
-  // now get data from context file.
   const { userData, setUserData, token, backendUrl, loadUserProfileData } =
     useContext(AppContext);
   console.log(userData);
-
   const [isEdit, setIsEdit] = useState(false);
   const [image, setImage] = useState(false);
 
@@ -22,14 +19,11 @@ const MyProfile = () => {
       formData.append("address", JSON.stringify(userData.address));
       formData.append("gender", userData.gender);
       formData.append("dob", userData.dob);
-      //img will be optional
       image && formData.append('image', image)
 
-      // now make the API call
       const {data} = await axios.post(backendUrl + '/api/user/update-profile', formData, {headers:{token}})
       if(data.success){
         toast.success(data.message);
-        //After that refetch user data
         await loadUserProfileData();
         setIsEdit(false);
         setImage(false)
@@ -176,7 +170,6 @@ const MyProfile = () => {
           {isEdit ? (
             <button
               className="border border-blue-700 px-8 py-2 rounded-full hover:bg-blue-400 hover:text-white transition-all"
-              // onClick={() => setIsEdit(false)}
               onClick={updateUserProfileData}
             >
               Save Information
