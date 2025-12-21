@@ -6,21 +6,14 @@ const Doctors = () => {
   const [showFilter, setShowFilter] = useState(false);
 
   const [filterDoc, setFilterDoc] = useState([]);
-  // for get this we will use useParams hooks
   const { speciality } = useParams();
-  // console.log(speciality)
-  //And here we will get all doctors from the context API.
   const { doctors } = useContext(AppContext);
-  // console.log(doctors);
   const navigate = useNavigate();
 
   const applyFilter = () => {
-    // here we will check if speciality is available then we are going to set doctors according to "speciality" data
     if (speciality) {
       setFilterDoc(doctors.filter((doc) => doc.speciality === speciality));
-      // (doc=>doc.speciality===speciality)- here we will check if doc.doc.speciality === speciality(http://localhost:5175/doctors/Gynecologist) , from the parameters , in that case we are going to save the doctors , else we will filter out the others doctors
     } else {
-      // Suppose here " if(speciality){" we are not get anything then we will add the "doctors" in setter function  setFilterDoc.
       setFilterDoc(doctors);
     }
   };
@@ -139,10 +132,6 @@ const Doctors = () => {
             >
               <img className="bg-blue-100" src={item.image} alt="doc" />
               <div className="p-4">
-                {/* <div className='flex items-center gap-2 text-sm text-center text-green-500'>
-                        <p className='w-2 h-2 bg-green-500 rounded-full'></p><p>Available</p>
-                    </div> */}
-                    {/* Start  */}
                 <div
                   className={`flex items-center gap-2 text-sm text-center ${
                     item.available ? "text-green-500" : "text-red-500"
