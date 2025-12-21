@@ -4,7 +4,6 @@ import { AppContext } from "../context/AppContext";
 
 const Doctors = () => {
   const [showFilter, setShowFilter] = useState(false);
-
   const [filterDoc, setFilterDoc] = useState([]);
   const { speciality } = useParams();
   const { doctors } = useContext(AppContext);
@@ -54,7 +53,6 @@ const Doctors = () => {
           >
             General physician
           </p>
-
           <p
             onClick={() =>
               speciality === "Gynecologist"
@@ -67,7 +65,6 @@ const Doctors = () => {
           >
             Gynecologist
           </p>
-
           <p
             onClick={() =>
               speciality === "Dermatologist"
@@ -80,7 +77,6 @@ const Doctors = () => {
           >
             Dermatologist
           </p>
-
           <p
             onClick={() =>
               speciality === "Pediatricians"
@@ -93,7 +89,6 @@ const Doctors = () => {
           >
             Pediatricians
           </p>
-
           <p
             onClick={() =>
               speciality === "Neurologist"
@@ -106,7 +101,6 @@ const Doctors = () => {
           >
             Neurologist
           </p>
-
           <p
             onClick={() =>
               speciality === "Gastroenterologist"
