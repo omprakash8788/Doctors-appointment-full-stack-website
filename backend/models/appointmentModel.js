@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const appointmentSchema = new mongoose.Schema({
   userId: {
     type: String,
@@ -46,7 +45,6 @@ const appointmentSchema = new mongoose.Schema({
     default: false,
   },
 });
-// After that create model
 const appointmentModel =
   mongoose.models.appointment ||
   mongoose.model("appointment", appointmentSchema);
