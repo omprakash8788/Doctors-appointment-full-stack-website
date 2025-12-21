@@ -5,10 +5,6 @@ import { Link } from "react-router-dom";
 const SpecialtyMenu = () => {
   return (
     <div className="flex flex-col items-center gap-4 py-16 text-gray-800" id="speciality">
-      {/*   <a className='flex items-center gap-2 bg-white px-8 py-3 rounded-full text-gray-600 text-sm m-auto md:m-0 hover:scale-105 transition-all duration-300' href="#speciality">
-                    Book Appointment <img className='w-3' src={assets.arrow_icon} alt="" />
-                  </a> */}
-      {/* we are passing this id , in Header.jsx a tag is the example of that. */}
       <h1 className="text-3xl font-medium">Find by Speciality</h1>
       <p className="sm:w-1/3 text-center text-sm">
         Our expert cardiologists specialize in diagnosing and treating
