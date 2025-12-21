@@ -19,21 +19,24 @@ const MyProfile = () => {
       formData.append("address", JSON.stringify(userData.address));
       formData.append("gender", userData.gender);
       formData.append("dob", userData.dob);
-      image && formData.append('image', image)
+      image && formData.append("image", image);
 
-      const {data} = await axios.post(backendUrl + '/api/user/update-profile', formData, {headers:{token}})
-      if(data.success){
+      const { data } = await axios.post(
+        backendUrl + "/api/user/update-profile",
+        formData,
+        { headers: { token } }
+      );
+      if (data.success) {
         toast.success(data.message);
         await loadUserProfileData();
         setIsEdit(false);
-        setImage(false)
-      }
-      else{
-        toast.error(data.message)
+        setImage(false);
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
       console.log(error);
-       toast.error(error.message)
+      toast.error(error.message);
     }
   };
 
