@@ -17,7 +17,6 @@ const Banner = () => {
         </div>
         {/* Right side */}
         <div className='hidden md:block md:w-1/2 lg:w-[370px] relative'>
-            {/* here we will be add css property for img should be hidden on mobile view  */}
            <img className='w-full absolute bottom-0 right-0 max-w-md' src={assets.appointment_img} alt="" />
         </div>
     </div>
