@@ -4,14 +4,43 @@ import { DoctorContext } from "../../context/DoctorContext";
 import { AppContext } from "../../context/AppContext";
 import { useEffect } from "react";
 import { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const DoctorProfile = () => {
-  const { profileData, setProfileData, getProfileData, dToken } =
+  const { profileData, setProfileData, getProfileData, dToken,backendUrl } =
     useContext(DoctorContext);
-  const { backendUrl } = useContext(AppContext);
+  // const { backendUrl } = useContext(AppContext);
   console.log(profileData);
  
   const [isEdit, setIsEdit] = useState(false);
+  const updateProfile = async()=>{
+    // in this we will add the logic , so when we click on the save button those data will store in db
+    try {
+      const updateData = {
+        address:profileData.address,
+        fees:profileData.fees,
+        available:profileData.available
+      }
+      // After that make the Api call
+      const {data} = await axios.post(backendUrl + "/api/doctor/update-profile", updateData, {headers:{dToken}});
+      if(data.success){
+        toast.success(data.message);
+        //After that call setIsEdit function false
+        setIsEdit(false);
+        // After that called the getProfile data function so that our profile data state will get updated
+        getProfileData();
+      }
+      else{
+        toast.error(data.message)
+      }
+      
+    } catch (error) {
+      toast.error(error.message)
+      console.log(error)
+      
+    }
+  }
 
 
   useEffect(() => {
@@ -73,7 +102,7 @@ const DoctorProfile = () => {
             {/* ano */}
             {
               isEdit ? 
-                 <button onClick={()=>setIsEdit(false)} className="px-4 py-1 border border-purple-600 text-sm rounded-full mt-5 hover:bg-purple-500 hover:text-white transition-all">
+                 <button onClick={updateProfile} className="px-4 py-1 border border-purple-600 text-sm rounded-full mt-5 hover:bg-purple-500 hover:text-white transition-all">
               Save
             </button>
             : 
