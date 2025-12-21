@@ -5,16 +5,11 @@ import { AppContext } from "../context/AppContext";
 const Navbar = () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
-  // const [token, setToken] = useState(true);
-  // now get the token from the AppContext API.
   const {token, setToken, userData}= useContext(AppContext)
-  // Note - Login the user we have also save the token in local storage.
-  // Create Logout functionality 
   const logout = ()=>{
     setToken(false);
     localStorage.removeItem("token")
   }
-  // So, whenever we have token it will we are login and when we dont have token we are logout.
   return (
     <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400">
       <img onClick={()=>navigate('/')} className="w-44 cursor-pointer" src={assets.logo} alt="" />
@@ -68,18 +63,14 @@ const Navbar = () => {
           <div className="flex items-center justify-between px-5 py-6">
             <img className="w-36" src={assets.logo} alt="" />
             <img className="w-7" onClick={()=>setShowMenu(false)} src={assets.cross_icon} alt="" />
-
           </div>
           <ul className="flex flex-col items-center gap-2 mt-5 px-5 text-lg font-medium">
             <NavLink className="px-4 py-2 rounded inline-block" onClick={()=>setShowMenu(false)} to="/">Home</NavLink>
             <NavLink className="px-4 py-2 rounded inline-block" onClick={()=>setShowMenu(false)} to="/doctors">All Doctors</NavLink>
             <NavLink className="px-4 py-2 rounded inline-block" onClick={()=>setShowMenu(false)} to="/about">About</NavLink>
             <NavLink className="px-4 py-2 rounded inline-block" onClick={()=>setShowMenu(false)} to="/contact">Contact</NavLink>
-
           </ul>
         </div>
-
-        {/* Mobile menu end here */}
       </div>
     </div>
   );
