@@ -3,28 +3,15 @@ import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 
 const RelatedDoctors = ({ docId, speciality }) => {
-  //1. First get the all doctors from the context file.
   const { doctors } = useContext(AppContext);
   const navigate = useNavigate();
-  // 2. After that create one state variable where we will store doctors data.
   const [relDoc, setRelDoc] = useState([]);
-  console.log(relDoc);
-  // 3. After that in parameters we passing props.
-  // Now using both props filter the related doctors and store in the "relDoc" state variable.
-  // 4.
-  useEffect(() => {
-    // first check if doctors length greater than 0 and also check specality
+   useEffect(() => {
     if (doctors.length > 0 && speciality) {
-      // then store in one variable
       const doctorsData = doctors.filter(
         (doc) => doc.speciality === speciality && doc._id != docId
       );
-      // doc.speciality===speciality ->>>> Here we are checking if doc.specilaty === specility that we are getting from the props then we are going to store this doctors in " doctorsData" variable.
-      //We already open doctor profile so expect of those id , we need to display other doctors. So we can write " && doc._id!=docId" , this one. In that case current doctor removed from the doctors data.
-
-      // After that we need to set "doctorsData" in our "relDoc" state variable.
       setRelDoc(doctorsData);
-      // After that check in console.
     }
   }, [doctors, speciality, docId]);
 
@@ -48,10 +35,6 @@ const RelatedDoctors = ({ docId, speciality }) => {
           >
             <img className="bg-blue-100 w-full" src={item.image} alt="doc" />
             <div className="p-4">
-              {/* <div className="flex items-center gap-2 text-sm text-center text-green-500">
-                <p className="w-2 h-2 bg-green-500 rounded-full"></p>
-                <p>Available</p>
-              </div> */}
                 <div
                 className={`flex items-center gap-2 text-sm text-center ${
                   item.available ? "text-green-500" : "text-red-500"
