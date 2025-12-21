@@ -87,8 +87,8 @@ const Appoinment = () => {
         const slotTime = formattedTime;
         //After that check doctor data
         const isSlotAvailable =
-          docInfo.slots_booked[slotDate] &&
-          docInfo.slots_booked[slotDate].includes(slotTime)
+          docInfo?.slots_booked[slotDate] &&
+          docInfo?.slots_booked[slotDate].includes(slotTime)
             ? false
             : true;
         // docInfo.slots_booked[slotDate] && docInfo.slots_booked[slotDate].includes(slotTime) - If both statement is true then in that case we will not add in slotTime , and any of these satement were false then we will know slot is available that why we provided true.
