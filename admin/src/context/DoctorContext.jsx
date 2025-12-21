@@ -19,6 +19,7 @@ const DoctorContextProvider = (props) => {
   const [appointments, setAppointments] = useState([]);
   console.log(appointments);
   const [dashData, setDashData] = useState([]);
+  const [profileData, setProfileData]=useState(false)
 
   const getAppointment = async () => {
     try {
@@ -95,10 +96,26 @@ const DoctorContextProvider = (props) => {
     }
   };
 
+  const getProfileData = async()=>{
+    try {
+      const {data} = await axios.get(backendUrl + "/api/doctor/profile", {headers:{dToken}});
+      if(data.success){
+        setProfileData(data.profileData)
+      }
+    } catch (error) {
+        console.log(error);
+      toast.error(error.message);
+      
+    }
+  }
+
   //here create one variable with the name value and it is going to be a object.
 
   const value = {
     //  So whenever we will add any function and variable value here then we can access in the any component using the DoctorContext.
+    profileData,
+    setProfileData,
+    getProfileData,
     dashData,
     setDashData,
     getDashData,
