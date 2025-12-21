@@ -63,7 +63,7 @@ const DoctorDashboard = () => {
             <p className="font-semibold">Latest Booking</p>
           </div>
           <div className="pt-4 border border-t-0">
-            {dashData.latestAppointments.map((item, index) => (
+            {dashData?.latestAppointments?.map((item, index) => (
               <div
                 className="flex items-center px-6 py-3 gap-3 hover:bg-gray-100"
                 key={index}
