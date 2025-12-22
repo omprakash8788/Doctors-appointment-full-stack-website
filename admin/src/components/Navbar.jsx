@@ -5,20 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { DoctorContext } from "../context/DoctorContext";
 
 const Navbar = () => {
-  // First get the AToken from the AdminContext
   const { aToken, setAToken } = useContext(AdminContext);
   const { dToken, setDToken} = useContext(DoctorContext);
   const navigate = useNavigate();
 
   const logout = () => {
     navigate("/");
-    aToken && setAToken(""); // here we checking if aToken have token in that case we will call setAToken and we will set it with empty string.
-    aToken && localStorage.removeItem("aToken"); // if aToken avaliable in that case we will call the local storage remove item and here we will remove the "aToken".
+    aToken && setAToken("");
+    aToken && localStorage.removeItem("aToken");
     dToken && setDToken('');
     dToken && localStorage.removeItem('dToken')
   };
-  // After that connect this function in button tag.
-
   return (
     <div className="flex justify-between items-center px-4 sm:px-10 py-3 border-b bg-white">
       <div className="flex items-center gap-2 text-xs">
