@@ -5,21 +5,16 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 
-// 1. Create context
 export const DoctorContext = createContext();
-
-// 2. After that create context provider function.
 const DoctorContextProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKENDURL;
-  //now we have backend url to make the Api call
   const [dToken, setDToken] = useState(
     localStorage.getItem("dToken") ? localStorage.getItem("dToken") : ""
   );
-
   const [appointments, setAppointments] = useState([]);
   console.log(appointments);
   const [dashData, setDashData] = useState([]);
-  const [profileData, setProfileData]=useState(false)
+  const [profileData, setProfileData] = useState(false);
 
   const getAppointment = async () => {
     try {
@@ -28,7 +23,6 @@ const DoctorContextProvider = (props) => {
         { headers: { dToken } }
       );
       if (data.success) {
-        // setAppointments(data.appointments.reverse());
         setAppointments(data.appointments);
       } else {
         toast.error(data.message);
@@ -46,7 +40,6 @@ const DoctorContextProvider = (props) => {
         { appoitnmentId },
         { headers: { dToken } }
       );
-      //check
       if (data.success) {
         toast.success(data.message);
         getAppointment();
@@ -66,7 +59,6 @@ const DoctorContextProvider = (props) => {
         { appoitnmentId },
         { headers: { dToken } }
       );
-      //check
       if (data.success) {
         toast.success(data.message);
         getAppointment();
@@ -78,7 +70,7 @@ const DoctorContextProvider = (props) => {
       toast.error(error.message);
     }
   };
-//dashboard
+  //dashboard
   const getDashData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/doctor/dashboard", {
@@ -96,23 +88,21 @@ const DoctorContextProvider = (props) => {
     }
   };
 
-  const getProfileData = async()=>{
+  const getProfileData = async () => {
     try {
-      const {data} = await axios.get(backendUrl + "/api/doctor/profile", {headers:{dToken}});
-      if(data.success){
-        setProfileData(data.profileData)
+      const { data } = await axios.get(backendUrl + "/api/doctor/profile", {
+        headers: { dToken },
+      });
+      if (data.success) {
+        setProfileData(data.profileData);
       }
     } catch (error) {
-        console.log(error);
+      console.log(error);
       toast.error(error.message);
-      
     }
-  }
-
-  //here create one variable with the name value and it is going to be a object.
+  };
 
   const value = {
-    //  So whenever we will add any function and variable value here then we can access in the any component using the DoctorContext.
     profileData,
     setProfileData,
     getProfileData,
@@ -137,7 +127,6 @@ const DoctorContextProvider = (props) => {
       localStorage.removeItem("dToken");
     }
   }, [dToken]);
-  //3
   return (
     <DoctorContext.Provider value={value}>
       {props.children}
