@@ -1,59 +1,43 @@
 import React from "react";
 import { createContext } from "react";
-// 1. Create context
 export const AppContext = createContext();
-// 2. After that create context provider function.
 const AppContextProvider = (props) => {
-  //here create one variable with the name value and it is going to be a object.
-  // const calculateAge = (dob) => {
-  //   const today = new Date();
-  //   const birthDate = new Date(dob);
-  //   let age = today.getFullYear() - birthDate.getFullYear();
-  //   return age;
-  // };
-
   const calculateAge = (dob) => {
-  if (!dob) return "N/A";
+    if (!dob) return "N/A";
+    const [day, month, year] = dob.split("-");
+    const birthDate = new Date(`${year}-${month}-${day}`);
+    if (isNaN(birthDate.getTime())) return "N/A";
 
-  // dob = "25-06-2002"
-  const [day, month, year] = dob.split("-");
-  const birthDate = new Date(`${year}-${month}-${day}`);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
 
-  if (isNaN(birthDate.getTime())) return "N/A";
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
 
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
+    return age;
+  };
 
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && today.getDate() < birthDate.getDate())
-  ) {
-    age--;
-  }
-
-  return age;
-};
-
-const calculateAge1 = (dob) => {
-  if (!dob) return "N/A";
-  // dob = "2004-01-13"
-  const [year, month, day] = dob.split("-");
-  const birthDate = new Date(year, month - 1, day);
-  if (isNaN(birthDate.getTime())) return "N/A";
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && today.getDate() < birthDate.getDate())
-  ) {
-    age--;
-  }
-  return age;
-};
-
-
+  const calculateAge1 = (dob) => {
+    if (!dob) return "N/A";
+    const [year, month, day] = dob.split("-");
+    const birthDate = new Date(year, month - 1, day);
+    if (isNaN(birthDate.getTime())) return "N/A";
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+    return age;
+  };
 
   const months = [
     " ",
@@ -70,7 +54,7 @@ const calculateAge1 = (dob) => {
     "Nov",
     "Dec",
   ];
-  
+
   const slotDateFormat = (slotDate) => {
     const dateArray = slotDate.split("_");
     return (
@@ -79,12 +63,10 @@ const calculateAge1 = (dob) => {
   };
 
   const value = {
-    //  So whenever we will add any function and variable value here then we can access in the any component using the AppContext.
     calculateAge,
     slotDateFormat,
-   calculateAge1
+    calculateAge1,
   };
-  //3
   return (
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
   );
