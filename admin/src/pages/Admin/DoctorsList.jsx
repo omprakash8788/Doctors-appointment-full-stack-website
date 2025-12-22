@@ -2,10 +2,8 @@ import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 
 const DoctorsList = () => {
-  //First destructure the data from the context.
   const {doctors, getAllDoctors, aToken, changeAvailability} = useContext(AdminContext);
    console.log(doctors)
-  //2.
   useEffect(()=>{
    if(aToken){
     getAllDoctors();
