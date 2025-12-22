@@ -8,40 +8,35 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const DoctorProfile = () => {
-  const { profileData, setProfileData, getProfileData, dToken,backendUrl } =
+  const { profileData, setProfileData, getProfileData, dToken, backendUrl } =
     useContext(DoctorContext);
-  // const { backendUrl } = useContext(AppContext);
   console.log(profileData);
- 
+
   const [isEdit, setIsEdit] = useState(false);
-  const updateProfile = async()=>{
-    // in this we will add the logic , so when we click on the save button those data will store in db
+  const updateProfile = async () => {
     try {
       const updateData = {
-        address:profileData.address,
-        fees:profileData.fees,
-        available:profileData.available
-      }
-      // After that make the Api call
-      const {data} = await axios.post(backendUrl + "/api/doctor/update-profile", updateData, {headers:{dToken}});
-      if(data.success){
+        address: profileData.address,
+        fees: profileData.fees,
+        available: profileData.available,
+      };
+      const { data } = await axios.post(
+        backendUrl + "/api/doctor/update-profile",
+        updateData,
+        { headers: { dToken } }
+      );
+      if (data.success) {
         toast.success(data.message);
-        //After that call setIsEdit function false
         setIsEdit(false);
-        // After that called the getProfile data function so that our profile data state will get updated
         getProfileData();
+      } else {
+        toast.error(data.message);
       }
-      else{
-        toast.error(data.message)
-      }
-      
     } catch (error) {
-      toast.error(error.message)
-      console.log(error)
-      
+      toast.error(error.message);
+      console.log(error);
     }
-  }
-
+  };
 
   useEffect(() => {
     if (dToken) {
@@ -83,37 +78,90 @@ const DoctorProfile = () => {
             </div>
             <p className="text-gray-600 font-medium mt-4">
               Appointment fees:{" "}
-              <span className="text-gray-800">$ {isEdit ? <input type="number" onChange={(e)=>setProfileData(prev => ({...prev, fees:e.target.value}))} value={profileData.fees}/> :  profileData.fees}</span>
+              <span className="text-gray-800">
+                ${" "}
+                {isEdit ? (
+                  <input
+                    type="number"
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        fees: e.target.value,
+                      }))
+                    }
+                    value={profileData.fees}
+                  />
+                ) : (
+                  profileData.fees
+                )}
+              </span>
             </p>
             <div className="flex gap-2 py-2">
               <p>Address:</p>
               <p className="text-sm text-gray-500">
-                {isEdit ? <input type="text" onChange={(e)=>setProfileData(prev=> ({...prev, address:{...prev.address, line1:e.target.value}}))} value={profileData.address.line1}/> : profileData.address.line1}
-                 <br />
+                {isEdit ? (
+                  <input
+                    type="text"
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        address: { ...prev.address, line1: e.target.value },
+                      }))
+                    }
+                    value={profileData.address.line1}
+                  />
+                ) : (
+                  profileData.address.line1
+                )}
+                <br />
                 {/* {profileData.address.line2} */}
-                   {isEdit ? <input type="text" onChange={(e)=>setProfileData(prev=> ({...prev, address:{...prev.address, line2:e.target.value}}))} value={profileData.address.line2}/> : profileData.address.line2}
+                {isEdit ? (
+                  <input
+                    type="text"
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        address: { ...prev.address, line2: e.target.value },
+                      }))
+                    }
+                    value={profileData.address.line2}
+                  />
+                ) : (
+                  profileData.address.line2
+                )}
               </p>
             </div>
             {/* ano div */}
             <div className="flex gap-1 pt-2">
-              <input onChange={()=>isEdit && setProfileData(prev=>({...prev, available:!prev.available}))} checked={profileData.available} type="checkbox" />
+              <input
+                onChange={() =>
+                  isEdit &&
+                  setProfileData((prev) => ({
+                    ...prev,
+                    available: !prev.available,
+                  }))
+                }
+                checked={profileData.available}
+                type="checkbox"
+              />
               <label htmlFor="">Available</label>
             </div>
             {/* ano */}
-            {
-              isEdit ? 
-                 <button onClick={updateProfile} className="px-4 py-1 border border-purple-600 text-sm rounded-full mt-5 hover:bg-purple-500 hover:text-white transition-all">
-              Save
-            </button>
-            : 
-               <button onClick={()=>setIsEdit(true)} className="px-4 py-1 border border-purple-600 text-sm rounded-full mt-5 hover:bg-purple-500 hover:text-white transition-all">
-              Edit
-            </button>
-            }
-         
-
-          
-
+            {isEdit ? (
+              <button
+                onClick={updateProfile}
+                className="px-4 py-1 border border-purple-600 text-sm rounded-full mt-5 hover:bg-purple-500 hover:text-white transition-all"
+              >
+                Save
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsEdit(true)}
+                className="px-4 py-1 border border-purple-600 text-sm rounded-full mt-5 hover:bg-purple-500 hover:text-white transition-all"
+              >
+                Edit
+              </button>
+            )}
           </div>
         </div>
       </div>
