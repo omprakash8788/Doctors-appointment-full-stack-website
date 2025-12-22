@@ -4,10 +4,7 @@ import { AdminContext } from "../../context/AdminContext";
 import {toast} from 'react-toastify';
 import axios from 'axios'
 const AddDoctor = () => {
-  // Create state variables
-  //1. First create state variable to store the image file.
   const [docImg, setDocImg]=useState(false);
-  // 2 - Create state for name
   const [name, setName]=useState('');
   const [email, setEmail]=useState('');
   const [password, setPassword]=useState('');
@@ -18,19 +15,13 @@ const AddDoctor = () => {
   const [degree, setDegree]=useState("");
   const [address1, setAddress1]=useState("");
   const [address2, setAddress2]=useState("");
-  // here we will create all require state so we can to that area.
-  // After that link these state variable.
-  // get backend url and token
   const {backendUrl, aToken} = useContext(AdminContext)
   const onSubmitHandler= async(e)=>{
     e.preventDefault();
-    // in this for we will call our Api so that we can add the "doctor" in the database from our admin panel.
     try {
-      // check for image
       if(!docImg){
         return toast.error("Image Not Selected")
       }
-      // Afer that create one form data for entire state.
       const formData= new FormData();
       formData.append('image', docImg);
       formData.append('name', name);
@@ -42,21 +33,12 @@ const AddDoctor = () => {
       formData.append('speciality', speciality);
       formData.append('degree', degree);
       formData.append('address', JSON.stringify({line1:address1, line2:address2}));
-      // now let check the form data
-      // console log form data
       formData.forEach((value, key)=>{
          console.log(`${key} : ${value}`);
       })
-      // Make the Api call to the backend to save the doctor details on the database.
       const {data}=await axios.post(backendUrl + "/api/admin/add-doctor", formData, {headers:{aToken}})
-      // backendUrl + "/api/admin/add-doctor"==>> backend url we contact with Api address so it look like this (http://localhost:4000/api/admin/add-doctor)
-      //  formData==> then we provide the formData
-      //  {headers:{aToken}} ====>>>>>>> after formData we add headers, and in the headers we will provide the admin token so this authentication get complete and our form data will be store in the databse.
-
-      // check
       if(data.success){
         toast.success(data.message)
-        //after that reset the form'
         setDocImg(false);
         setName("");
         setPassword("")
@@ -70,8 +52,6 @@ const AddDoctor = () => {
       }else{
         toast.error(data.message)
       }
-
-      
     } catch (error) {
        toast.error(error.message)
        console.log(error)
