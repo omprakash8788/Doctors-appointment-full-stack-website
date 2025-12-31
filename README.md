@@ -13,7 +13,6 @@
 
 
 
-
 ![Typing SVG](https://readme-typing-svg.herokuapp.com?size=24&color=00F7FF&width=900&lines=Doctors+Appointment+System+🏥;Full+Stack+MERN+Healthcare+Platform;Admin+%E2%86%94+Doctor+%E2%86%94+Patient;Scalable+Architecture+%7C+Production+Ready;Node.js+%7C+Express+%7C+MongoDB+%7C+React)
 
 # 🏥 Doctors Appointment Full-Stack Platform
