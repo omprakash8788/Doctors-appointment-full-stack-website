@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import appointmentModel from "../models/appointmentModel.js";
 
+//changeAvailablity 
 const changeAvailablity = async (req, res) => {
   try {
     const { docId } = req.body;
